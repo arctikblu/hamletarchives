@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hamlet Archives</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #f3f2ee;
+  color: #292929;
+  font-family: Georgia, serif;
+}
+header {
+  background: #202c32;
+  color: white;
+  padding: 28px 20px;
+  text-align: center;
+}
+header h1 { letter-spacing: 4px; }
+header p { color: #c9d0d0; }
+main {
+  max-width: 780px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+.panel {
+  background: white;
+  border: 1px solid #ccc;
+  padding: 32px;
+  text-align: center;
+}
+input {
+  width: 75%;
+  padding: 13px;
+  border: 1px solid #aaa;
+  font-size: 15px;
+}
+button {
+  background: #324f63;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  cursor: pointer;
+  margin: 12px 5px;
+}
+button:hover { background: #52768a; }
+#results { margin-top: 25px; }
+.snapshot {
+  background: #f5f3ec;
+  border: 1px solid #bbb;
+  padding: 22px;
+  margin-top: 15px;
+}
+footer {
+  text-align: center;
+  padding: 35px;
+  color: #777;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HAMLET ARCHIVES</h1>
+  <p>Some truths were never meant to be recovered.</p>
+</header>
+
+<main>
+  <div class="panel">
+    <h2>Explore Archived Websites</h2>
+    <p>Enter a website address to browse its history.</p>
+
+    <input id="website" placeholder="www.elsinore-royal.dk">
+    <br>
+    <button onclick="search()">Browse History</button>
+
+    <div id="results" aria-live="polite"></div>
+  </div>
+</main>
+
+<footer>
+  HAMLET ARCHIVES | DIGITAL PRESERVATION PROJECT
+</footer>
+
+<script>
+function search() {
+  const url = document.getElementById("website")
+    .value.trim().toLowerCase();
+
+  const results = document.getElementById("results");
+  results.replaceChildren();
+
+  if (url !== "www.elsinore-royal.dk") {
+    results.textContent = "No archived records found.";
+    return;
+  }
+
+  const heading = document.createElement("h3");
+  heading.textContent = "5 Archived Captures Found";
+
+  const button = document.createElement("button");
+  button.textContent = "March 15, 2001";
+  button.addEventListener("click", openArchive);
+
+  results.append(heading, button);
+}
+
+function openArchive() {
+  const results = document.getElementById("results");
+  results.replaceChildren();
+
+  const page = document.createElement("div");
+  page.className = "snapshot";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Elsinore Royal Palace";
+
+  const date = document.createElement("p");
+  date.textContent = "Archived: March 15, 2001";
+
+  const news = document.createElement("p");
+  news.textContent =
+    "His Majesty King Hamlet continues to rule Denmark.";
+
+  page.append(heading, date, news);
+  results.append(page);
+}
+</script>
+</body>
+</html>
