@@ -1,134 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hamlet Archives</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inbox (1) - Mail</title>
 <style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: #f3f2ee;
-  color: #292929;
-  font-family: Georgia, serif;
-}
-header {
-  background: #202c32;
-  color: white;
-  padding: 28px 20px;
-  text-align: center;
-}
-header h1 { letter-spacing: 4px; }
-header p { color: #c9d0d0; }
-main {
-  max-width: 780px;
-  margin: 50px auto;
-  padding: 0 20px;
-}
-.panel {
-  background: white;
-  border: 1px solid #ccc;
-  padding: 32px;
-  text-align: center;
-}
-input {
-  width: 75%;
-  padding: 13px;
-  border: 1px solid #aaa;
-  font-size: 15px;
-}
-button {
-  background: #324f63;
-  color: white;
-  border: none;
-  padding: 14px 20px;
-  cursor: pointer;
-  margin: 12px 5px;
-}
-button:hover { background: #52768a; }
-#results { margin-top: 25px; }
-.snapshot {
-  background: #f5f3ec;
-  border: 1px solid #bbb;
-  padding: 22px;
-  margin-top: 15px;
-}
-footer {
-  text-align: center;
-  padding: 35px;
-  color: #777;
-  font-size: 12px;
-}
+:root{font-family:Arial,Helvetica,sans-serif;color:#202124;background:#f6f8fc}*{box-sizing:border-box}body{margin:0}button{font:inherit;cursor:pointer}.top{height:65px;display:flex;align-items:center;gap:22px;padding:0 24px}.brand{font-size:23px;color:#5f6368;min-width:225px}.brand span{color:#4285f4}.search{background:#eaf1fb;border-radius:24px;padding:15px 20px;flex:1;max-width:690px;color:#667085;font-size:14px}.profile{margin-left:auto;background:#375a7f;color:white;border-radius:50%;width:34px;height:34px;display:grid;place-items:center;font-size:14px}.layout{display:flex;min-height:calc(100vh - 65px)}aside{width:250px;padding:15px 12px;flex-shrink:0}.compose{background:#c2e7ff;border:0;border-radius:17px;padding:17px 24px;margin-bottom:20px;font-weight:bold}.folder{padding:10px 18px;border-radius:0 20px 20px 0;color:#4c5057;font-size:14px}.folder.active{background:#d3e3fd;color:#001d35;font-weight:bold}main{background:white;border-radius:18px 18px 0 0;flex:1;margin-right:16px;min-width:0;overflow:hidden}.toolbar{padding:20px 22px;border-bottom:1px solid #eee;color:#666;font-size:14px}.tabs{display:flex;border-bottom:1px solid #e9eaed}.tab{padding:17px 25px;color:#555;font-size:14px;min-width:170px}.tab.active{border-bottom:3px solid #0b57d0;color:#0b57d0;font-weight:bold}.mail{display:grid;grid-template-columns:30px 30px minmax(110px,185px) minmax(0,1fr) 75px;align-items:center;gap:8px;padding:12px 18px;border-bottom:1px solid #e6e8eb;background:#f2f6fc;font-size:14px;color:#555;min-height:43px}.mail.unread{background:white;color:#202124;font-weight:bold;box-shadow:inset 0 -1px #ddd;cursor:pointer}.mail.unread:hover{box-shadow:inset 0 0 0 1px #d2d6dc;background:#f8faff}.subject{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.preview{color:#777;font-weight:normal}.date{text-align:right;font-size:12px}.message{padding:26px 36px;max-width:850px}.back{border:0;background:transparent;color:#444;padding:8px 12px;margin:-8px 0 18px -12px}.message h2{font-size:23px;font-weight:400;margin:5px 0 25px}.sender{display:flex;align-items:center;gap:12px;margin-bottom:34px}.avatar{width:39px;height:39px;background:#64748b;color:white;border-radius:50%;display:grid;place-items:center}.sender small{color:#777}.body{font-size:15px;line-height:1.9;max-width:650px}.body a{color:#1155cc}.body p{margin-bottom:18px}.muted{color:#777}.notice{margin-top:35px;font-size:12px;color:#8a8f98}@media(max-width:720px){aside{display:none}.brand{min-width:auto}.search{display:none}main{margin:0;border-radius:0}.mail{grid-template-columns:18px minmax(80px,120px) minmax(0,1fr) 45px;padding:12px 8px}.mail .star{display:none}.tab{min-width:0;flex:1;padding:15px 12px}.message{padding:22px}.top{padding:0 15px}}
 </style>
 </head>
 <body>
-
-<header>
-  <h1>HAMLET ARCHIVES</h1>
-  <p>Some truths were never meant to be recovered.</p>
-</header>
-
-<main>
-  <div class="panel">
-    <h2>Explore Archived Websites</h2>
-    <p>Enter a website address to browse its history.</p>
-
-    <input id="website" placeholder="www.elsinore-royal.dk">
-    <br>
-    <button onclick="search()">Browse History</button>
-
-    <div id="results" aria-live="polite"></div>
-  </div>
-</main>
-
-<footer>
-  HAMLET ARCHIVES | DIGITAL PRESERVATION PROJECT
-</footer>
-
+<header class="top"><div class="brand">✉ <span>G</span>mail</div><div class="search">⌕ &nbsp; Search mail</div><div class="profile">P</div></header>
+<div class="layout"><aside><button class="compose" type="button">✎ &nbsp; Compose</button><div class="folder active">▣ &nbsp; Inbox &nbsp; <strong>1</strong></div><div class="folder">☆ &nbsp; Starred</div><div class="folder">◷ &nbsp; Snoozed</div><div class="folder">➤ &nbsp; Sent</div><div class="folder">▤ &nbsp; Drafts</div><div class="folder">⌄ &nbsp; More</div></aside><main id="main"><div class="toolbar">☐ &nbsp; ⟳ &nbsp; ⋮ <span style="float:right">1–6 of 6</span></div><div class="tabs"><div class="tab active">▣ &nbsp; Primary</div><div class="tab">◉ &nbsp; Promotions</div><div class="tab">☷ &nbsp; Social</div></div><div id="inbox"></div></main></div>
 <script>
-function search() {
-  const url = document.getElementById("website")
-    .value.trim().toLowerCase();
+const emails=[
+ {from:'Unknown Sender',subject:'The records are lying.',preview:'The King is dead. But the archives tell a different story...',date:'2:17 AM',special:true},
+ {from:'University Library',subject:'Your weekly library update',preview:'Discover new digital resources available this week.',date:'Yesterday'},
+ {from:'Calendar',subject:'Reminder: Upcoming appointment',preview:'You have an event scheduled for tomorrow.',date:'Oct 24'},
+ {from:'Campus News',subject:'October newsletter',preview:'Here are this month’s announcements and updates.',date:'Oct 22'},
+ {from:'Cloud Storage',subject:'Your monthly storage summary',preview:'Review your recent account activity.',date:'Oct 19'},
+ {from:'Study Group',subject:'Notes from last meeting',preview:'Thanks everyone for joining our discussion.',date:'Oct 17'}
+];
+function renderInbox(){document.title='Inbox (1) - Mail';const inbox=document.getElementById('inbox');inbox.replaceChildren();for(const email of emails){const row=document.createElement('div');row.className='mail'+(email.special?' unread':'');const check=document.createElement('span');check.textContent='☐';const star=document.createElement('span');star.textContent='☆';star.className='star';const sender=document.createElement('span');sender.textContent=email.from;const subj=document.createElement('span');subj.className='subject';const strong=document.createElement('span');strong.textContent=email.subject+' — ';const preview=document.createElement('span');preview.className='preview';preview.textContent=email.preview;subj.append(strong,preview);const date=document.createElement('span');date.className='date';date.textContent=email.date;row.append(check,star,sender,subj,date);if(email.special){row.tabIndex=0;row.setAttribute('role','button');row.setAttribute('aria-label','Open message from Unknown Sender');row.addEventListener('click',openMessage);row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openMessage()}})}inbox.append(row)}}
+function openMessage(){document.title='The records are lying. - Mail';const main=document.getElementById('main');main.replaceChildren();const wrap=document.createElement('div');wrap.className='message';const back=document.createElement('button');back.className='back';back.textContent='← Back to Inbox';back.addEventListener('click',()=>location.reload());const title=document.createElement('h2');title.textContent='The records are lying.';const sender=document.createElement('div');sender.className='sender';sender.innerHTML='<div class="avatar">?</div><div><strong>Unknown Sender</strong><br><small>to me · 2:17 AM</small></div>';const body=document.createElement('div');body.className='body';const lines=['The King is dead.','The official records say it was an accident.','But history has been rewritten. Someone made sure of that.','If you want to know what really happened, go back to the beginning.','Find what they erased.'];for(const line of lines){const p=document.createElement('p');p.textContent=line;body.append(p)}const p=document.createElement('p');const link=document.createElement('a');link.href='archive.html';link.textContent='Access the archived website';p.append(link);body.append(p);const sign=document.createElement('p');sign.textContent='— H';body.append(sign);const notice=document.createElement('div');notice.className='notice';notice.textContent='This is a fictional inbox created for the Hamlet Archives interactive game.';wrap.append(back,title,sender,body,notice);main.append(wrap)}
+renderInbox();
+</script>
+</body>
+</html>
 
-  const results = document.getElementById("results");
-  results.replaceChildren();
-
-  if (url !== "www.elsinore-royal.dk") {
-    results.textContent = "No archived records found.";
-    return;
-  }
-
-  const heading = document.createElement("h3");
-  heading.textContent = "5 Archived Captures Found";
-
-  const button = document.createElement("button");
-  button.textContent = "March 15, 2001";
-  button.addEventListener("click", openArchive);
-
-  results.append(heading, button);
-}
-
-function openArchive() {
-  const results = document.getElementById("results");
-  results.replaceChildren();
-
-  const page = document.createElement("div");
-  page.className = "snapshot";
-
-  const heading = document.createElement("h2");
-  heading.textContent = "Elsinore Royal Palace";
-
-  const date = document.createElement("p");
-  date.textContent = "Archived: March 15, 2001";
-
-  const news = document.createElement("p");
-  news.textContent =
-    "His Majesty King Hamlet continues to rule Denmark.";
-
-  page.append(heading, date, news);
-  results.append(page);
-}
 </script>
 </body>
 </html>
