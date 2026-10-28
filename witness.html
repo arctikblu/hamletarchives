@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Witness Register | Hamlet Archives</title>
+<style>
+:root{font-family:Inter,Arial,sans-serif;color:#202d38;background:#f3f6f9}*{box-sizing:border-box}body{margin:0}header{background:#fff;border-bottom:1px solid #dce4eb;padding:18px max(20px,calc((100vw - 980px)/2));display:flex;justify-content:space-between;gap:12px;align-items:center}header b{letter-spacing:.1em}header small{color:#687987}.wrap{max-width:940px;margin:38px auto;padding:0 18px}.panel{background:#fff;border:1px solid #dce4eb;border-radius:12px;padding:28px;box-shadow:0 8px 30px #26374609}h1{font-size:28px;margin:0 0 9px}h2{font-size:19px}.muted{color:#647585;line-height:1.65}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;color:#437a98;text-transform:uppercase}input{padding:13px 15px;border:1px solid #bdcbd6;border-radius:7px;font:inherit;width:min(100%,350px)}button,.btn{border:0;border-radius:7px;background:#1c638b;color:white;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer}button:hover,.btn:hover{filter:brightness(.93)}button:disabled{opacity:.4;cursor:default}a{color:#17658f}.error{color:#a33e42;min-height:1.4em}.hidden{display:none!important}.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.case{background:#f6f9fc;border-left:4px solid #3b83a8;padding:13px 17px;margin:19px 0}.card{background:#fff;border:1px solid #ccd8e0;border-radius:9px;padding:17px;margin:12px 0;display:flex;gap:14px;align-items:center;cursor:grab}.card.dragging{opacity:.5}.card .copy{flex:1}.card strong{display:block;margin-bottom:7px}.card p{margin:0;color:#526677;line-height:1.6}.tag{font-size:11px;color:#54768a;font-weight:700;letter-spacing:.09em}.arrows{display:flex;flex-direction:column;gap:5px}.arrows button{padding:7px 11px;background:#e8eff5;color:#2c5268}.status{margin-top:15px;min-height:24px}.good{color:#21734d}.bad{color:#a13b44}.terminal{margin-top:24px;background:#101820;color:#d5e4e7;border-radius:9px;padding:23px;font-family:Consolas,monospace;line-height:1.85;white-space:pre-wrap;border:1px solid #344d55}.terminal .warn{color:#f0a9a9}.terminal .green{color:#91d9ae}.glitch{animation:flicker .15s 5}@keyframes flicker{50%{opacity:.45}}.footer{font-size:12px;color:#71818d;margin:24px 0;text-align:center}@media(max-width:600px){.panel{padding:19px}header{padding:15px 18px}h1{font-size:23px}.card{align-items:flex-start}}
+</style>
+</head>
+<body>
+<header><b>ELSINORE <span style="color:#317ba1">ARCHIVES</span></b><small>ROYAL RECORDS · WITNESS DIVISION</small></header>
+<main class="wrap">
+<section class="panel" id="entry"><div class="eyebrow">Restricted Records / File Lookup</div><h1>Witness Register</h1><p class="muted">Enter a recovered file reference to view sealed witness material. References are case-insensitive.</p><form id="lookup" class="bar"><input id="filecode" placeholder="e.g. WIT-000" autocomplete="off" aria-label="File reference" required><button type="submit">Retrieve File</button></form><p class="error" id="lookup-error" role="status"></p><p class="muted" style="font-size:13px">Access is limited to previously recovered file references.</p></section>
+<section class="panel hidden" id="investigation"><div class="eyebrow">File WIT-135 / Evidence reconstruction</div><h1>Witness Register: Elsinore</h1><p class="muted">Three archived statements were detached from their original sequence. Reconstruct the chronology using the events described, not the order in which the statements appear.</p><div class="case"><strong>Case note:</strong> The archive concerns the final events at the Danish court. One account describes preparations, another the duel, and another its aftermath. These statements are fictional archival reconstructions inspired by Shakespeare's <em>Hamlet</em>, not quotations from the play.</div><h2>Recovered Statements</h2><p class="muted">Drag the cards into chronological order, or use the ↑ and ↓ controls. Then select <strong>Verify Sequence</strong>.</p><div id="cards" aria-live="polite"></div><div class="bar"><button id="verify">Verify Sequence</button><button id="reset" style="background:#e8eff5;color:#34556b">Reset Order</button></div><p id="status" class="status" role="status"></p><section id="reveal" class="hidden"><div class="terminal" id="terminal"><span class="green">SEQUENCE VERIFIED — 1 → 3 → 5</span>
+
+ARCHIVE INTEGRITY WARNING
+<span class="warn">Original timestamps overwritten.
+Witness statements manually reordered.</span>
+
+LAST AUTHORIZED EDITOR: H.VERITAS
+REVISION LOG: /admin/revisions
+NEXT FILE REFERENCE: MOU-2413
+
+<span class="warn">The surviving account is not the same as an untouched account.</span></div><p class="muted">The recovered reference <strong>MOU-2413</strong> may be needed for the next investigation. The editor's identity remains unconfirmed.</p><button id="copyref">Copy MOU-2413</button><p class="muted" id="copymsg" aria-live="polite"></p></section></section>
+<p class="footer">HAMLET ARCHIVES · A fictional interactive literary investigation · Inspired by William Shakespeare's <em>Hamlet</em></p>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const storageKey='hamlet_witness_complete';
+const statements=[
+{id:5,name:'Statement 05 — The Surviving Witness',text:'After the duel, the court fell silent. Horatio remained to tell the events to those who arrived afterward.'},
+{id:1,name:'Statement 01 — The Arrangements',text:'Before the duel, the king and Laertes prepared a contest at court. The prince had not yet entered the hall.'},
+{id:3,name:'Statement 03 — The Duel',text:'During the duel, the poisoned scheme unfolded. The queen drank from the cup, and the confrontation turned fatal.'}
+];
+let order=[...statements],dragged=null;
+function render(){const host=$('cards');host.replaceChildren();order.forEach((item,index)=>{const card=document.createElement('div');card.className='card';card.draggable=true;card.dataset.id=item.id;const copy=document.createElement('div');copy.className='copy';const tag=document.createElement('div');tag.className='tag';tag.textContent='RECOVERED ENTRY · '+String(item.id).padStart(2,'0');const title=document.createElement('strong');title.textContent=item.name;const p=document.createElement('p');p.textContent=item.text;copy.append(tag,title,p);const controls=document.createElement('div');controls.className='arrows';const up=document.createElement('button');up.type='button';up.textContent='↑';up.setAttribute('aria-label','Move '+item.name+' up');up.disabled=index===0;up.onclick=()=>move(index,-1);const down=document.createElement('button');down.type='button';down.textContent='↓';down.setAttribute('aria-label','Move '+item.name+' down');down.disabled=index===order.length-1;down.onclick=()=>move(index,1);controls.append(up,down);card.append(copy,controls);card.addEventListener('dragstart',e=>{dragged=item.id;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(item.id))});card.addEventListener('dragend',()=>{dragged=null;card.classList.remove('dragging')});card.addEventListener('dragover',e=>e.preventDefault());card.addEventListener('drop',e=>{e.preventDefault();const from=order.findIndex(x=>x.id===dragged);const to=order.findIndex(x=>x.id===item.id);if(from<0||to<0||from===to)return;const [v]=order.splice(from,1);order.splice(to,0,v);render()});host.append(card)})}
+function move(index,delta){const target=index+delta;if(target<0||target>=order.length)return;[order[index],order[target]]=[order[target],order[index]];render()}
+function unlock(){ $('reveal').classList.remove('hidden');$('status').className='status good';$('status').textContent='Sequence verified. A concealed revision log has been recovered.';try{localStorage.setItem(storageKey,'true')}catch(e){}$('terminal').classList.add('glitch');setTimeout(()=>$('terminal').classList.remove('glitch'),850)}
+$('lookup').addEventListener('submit',e=>{e.preventDefault();if($('filecode').value.trim().toUpperCase()!=='WIT-135'){$('lookup-error').textContent='File not found. Check the reference recovered from the previous archive.';return}$('entry').classList.add('hidden');$('investigation').classList.remove('hidden');render();try{if(localStorage.getItem(storageKey)==='true')unlock()}catch(e){}});
+$('verify').addEventListener('click',()=>{if(order.map(x=>x.id).join(',')==='1,3,5'){unlock()}else{$('status').className='status bad';$('status').textContent='Sequence mismatch. Which event happened before the duel, and which happened afterward?';$('reveal').classList.add('hidden')}});
+$('reset').addEventListener('click',()=>{order=[...statements];render();$('status').textContent='';$('reveal').classList.add('hidden');try{localStorage.removeItem(storageKey)}catch(e){}});
+$('copyref').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('MOU-2413');$('copymsg').textContent='Reference copied.'}catch(e){$('copymsg').textContent='Copy manually: MOU-2413'}});
+})();
+</script>
+</body>
+</html>
