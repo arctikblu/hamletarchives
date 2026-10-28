@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Record Lookup | Hamlet Archives</title>
+<style>
+:root{font-family:Arial,Helvetica,sans-serif;color:#273746;background:#f4f7fa}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer}header{background:white;border-bottom:1px solid #d9e1e7;padding:18px max(20px,calc((100vw - 1000px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px}.logo{font-weight:800;color:#264969;letter-spacing:.5px}a{color:#28649a;text-decoration:none}a:hover{text-decoration:underline}main{max-width:1000px;margin:36px auto;padding:0 20px}.panel{background:white;border:1px solid #d9e1e7;border-radius:8px;padding:25px;margin:18px 0;box-shadow:0 2px 8px #152c3c09}.muted{color:#66798a;font-size:14px}.search{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}input{padding:12px;border:1px solid #afbfcb;border-radius:5px;min-width:200px;flex:1}button.primary{border:0;border-radius:5px;background:#28649a;color:white;padding:12px 18px}button.primary:hover{background:#1d507e}.hidden{display:none}.reports{display:grid;grid-template-columns:1fr 1fr;gap:16px}.report{background:#faf8f3;border:1px solid #d7cbb8;padding:22px;font-family:Georgia,serif;line-height:1.75}.report h3{margin-top:0}.stamp{font:12px Arial,sans-serif;color:#736b60;letter-spacing:1px}.field{margin:13px 0}.changed{border:1px dashed #b0a8a0;border-radius:4px;background:#fffdf8;color:#332e29;text-align:left;padding:5px 8px;font-family:Georgia,serif;line-height:1.5}.changed:hover,.changed:focus-visible{outline:2px solid #2871a3}.changed.found{background:#dceee4;border-color:#498d6b}.found small{color:#216646;font-family:Arial,sans-serif}.notice{padding:13px 16px;background:#edf5fa;border-left:4px solid #397ba8;margin-top:18px}.corrupt{background:#171e28;color:#b9d8c5;padding:18px;font:14px/1.8 monospace;white-space:pre-wrap;overflow-wrap:anywhere}.error{color:#a33e3e}.status{min-height:20px}footer{text-align:center;padding:28px;color:#82919d;font-size:12px}@media(max-width:650px){.reports{grid-template-columns:1fr}.panel{padding:17px}}
+</style>
+</head>
+<body>
+<header><span class="logo">HAMLET ARCHIVES</span><a href="archive.html">← Back to snapshots</a></header>
+<main>
+<section class="panel">
+<p class="muted">RECORD INDEX / SEARCH</p><h1>Royal Records Database</h1>
+<p class="muted">Enter a recovered file reference to retrieve the corresponding document. The index is incomplete.</p>
+<form id="lookup" class="search"><input id="fileid" placeholder="File reference (e.g. XXX-000)" aria-label="File reference" autocomplete="off" required><button class="primary">Search records</button></form>
+<p id="lookupStatus" class="status muted" role="status"></p>
+</section>
+<section id="document" class="panel hidden">
+<p class="muted">FOUND: HOR-001 · ROYAL DEATH INVESTIGATION</p><h2>Conflicting Versions</h2>
+<p>Compare the preliminary and revised reports. Select <strong>three changed values in the revised report</strong> to mark them as evidence.</p>
+<div class="reports">
+<article class="report"><div class="stamp">CAPTURE A / PRELIMINARY</div><h3>Royal Report 01</h3><p class="field">Cause of death: <strong>Unconfirmed</strong></p><p class="field">Witness statement: <strong>Pending</strong></p><p class="field">Archive status: <strong>Preliminary</strong></p><p class="field">Location: <strong>Elsinore</strong></p></article>
+<article class="report"><div class="stamp">CAPTURE B / REVISED</div><h3>Royal Report 02</h3><p class="field">Cause of death: <button class="changed" data-letter="H" aria-pressed="false">Serpent bite</button></p><p class="field">Witness statement: <button class="changed" data-letter="O" aria-pressed="false">Closed</button></p><p class="field">Archive status: <button class="changed" data-letter="R" aria-pressed="false">Final</button></p><p class="field">Location: <strong>Elsinore</strong></p></article>
+</div>
+<p id="count" class="notice" role="status">Differences documented: 0 / 3</p>
+<div id="reveal" class="hidden"><div class="corrupt">WARNING: DOCUMENT HISTORY HAS BEEN ALTERED.
+
+Recovered sequence: H — O — R
+Reference prefix: HOR
+Document ID: HOR-001
+
+NEXT INDEX: WIT-135
+Original witness notes may have been omitted from the final account.</div><p class="muted">You have recovered a reference to the witness register. Keep it for the next chapter.</p><a href="archive.html">Return to the archive</a></div>
+</section>
+</main>
+<footer>HAMLET ARCHIVES · FICTIONAL HISTORICAL RECORDS · INTERACTIVE LITERARY PROJECT</footer>
+<script>
+const lookup=document.getElementById('lookup');const documentPanel=document.getElementById('document');const status=document.getElementById('lookupStatus');
+function showRecord(){documentPanel.classList.remove('hidden');status.textContent='Record located: HOR-001';documentPanel.scrollIntoView({behavior:'smooth',block:'start'});}
+lookup.addEventListener('submit',e=>{e.preventDefault();const id=document.getElementById('fileid').value.trim().toUpperCase();if(id==='HOR-001'){showRecord();}else{documentPanel.classList.add('hidden');status.textContent='No public record matches that reference.';}});
+const found=new Set();const buttons=[...document.querySelectorAll('.changed')];
+buttons.forEach(button=>button.addEventListener('click',()=>{const letter=button.dataset.letter;found.add(letter);button.classList.add('found');button.setAttribute('aria-pressed','true');button.disabled=true;button.insertAdjacentHTML('beforeend',' <small>✓ '+letter+'</small>');document.getElementById('count').textContent='Differences documented: '+found.size+' / 3';if(found.size===3){localStorage.setItem('hamlet_records_completed','yes');document.getElementById('reveal').classList.remove('hidden');}}));
+if(localStorage.getItem('hamlet_records_completed')==='yes'){document.getElementById('fileid').value='HOR-001';showRecord();buttons.forEach(b=>b.click());}
+</script>
+</body>
+</html>
