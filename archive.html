@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Archive — Elsinore Royal</title>
+<style>
+:root{--blue:#174ea6;--line:#dadce0;--muted:#666;--pale:#f8f9fa}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#222;font:14px Arial,Helvetica,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+.top{background:#f4f6f8;border-bottom:1px solid var(--line);padding:13px 20px}
+.brand{font-size:24px;font-weight:700;letter-spacing:-1px}
+.brand span{color:#2463a6}
+.wrap{max-width:960px;margin:auto;padding:24px 16px}
+.crumb{font-size:12px;color:var(--muted);margin-bottom:10px}
+h1{font-size:27px;letter-spacing:-.7px;font-weight:600;margin:0 0 8px}
+.intro{color:#555;line-height:1.55;margin:0 0 19px}
+.search{display:flex;gap:8px}
+.field{width:100%;min-width:0;border:1px solid #aaa;border-radius:3px;padding:12px;background:#fff;color:#222}
+.btn{border:1px solid #9aa0a6;background:#fff;border-radius:3px;padding:9px 13px;color:var(--blue)}
+.primary{background:var(--blue);color:white;border-color:var(--blue)}
+.error{color:#a12622;background:#fce8e6;padding:11px;margin-top:10px;border-radius:3px}
+.hidden{display:none!important}
+.summary{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:24px}
+.domain{font-size:19px;font-weight:600}
+.muted{color:var(--muted);font-size:12px}
+.sim-tag{font-size:11px;color:#666;border:1px solid #ddd;padding:6px 8px;border-radius:3px}
+.panel{border:1px solid var(--line);border-radius:5px;margin-top:17px;overflow:hidden}
+.ph{padding:12px 15px;background:var(--pale);border-bottom:1px solid var(--line);font-weight:700}
+.pb{padding:15px}
+.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.month{border:1px solid #e0e0e0;padding:9px;border-radius:4px;min-width:0}
+.monthname{font-weight:700;text-align:center;margin-bottom:9px}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center;font-size:11px}
+.days span{padding:5px 0;border-radius:3px;min-width:0}
+.days .snap{background:#b7d7f6;color:#123b69;font-weight:bold;cursor:pointer}
+.days .dead{background:#e5e7eb;color:#555;cursor:pointer}
+.days .active{outline:2px solid var(--blue);outline-offset:-2px}
+.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12px;margin-top:12px;color:#555}
+.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;background:#b7d7f6}
+.dot.dead{background:#e5e7eb}
+.snapshot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #eee}
+.snapshot:last-child{border-bottom:0}
+.status{font-size:11px;border-radius:3px;padding:4px 7px;white-space:nowrap;background:#e5f4e8;color:#176534}
+.status.dead{background:#fce8e6;color:#a12622}
+.snapshot-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.archivehead{background:#edf4fb;border-bottom:1px solid #c9d8e8;padding:10px 14px;color:#24496c;font-size:12px}
+.doc{max-width:690px;margin:20px auto;padding:22px 24px;border:1px solid #ddd;box-shadow:0 1px 3px #0000000d;min-height:235px}
+.doc h2{font-family:Georgia,serif;font-size:23px;line-height:1.3;margin:13px 0}
+.doc p{line-height:1.65;color:#444}
+.rule{height:1px;background:#ccc;margin:15px 0}
+.deadbox{background:#fff7f7;border:1px solid #efcccc;padding:18px;border-radius:3px}
+.footnote{font-size:11px;color:#777;line-height:1.6;margin-top:18px}
+@media(max-width:600px){.months{grid-template-columns:repeat(2,minmax(0,1fr))}.brand{font-size:21px}.wrap{padding:17px 11px}.doc{padding:15px;margin:12px auto}.snapshot{align-items:flex-start}.snapshot-right .btn{padding:7px 9px}}
+@media(max-width:360px){.months{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span>Internet</span> Archive <span style="color:#555;font-weight:400;font-size:14px;letter-spacing:0"> / Wayback-style demo</span></div>
+</header>
+<main class="wrap">
+  <div class="crumb">WEB ARCHIVE &nbsp;›&nbsp; URL HISTORY</div>
+  <h1>Browse archived pages</h1>
+  <p class="intro">Explore captured versions of a website across time.</p>
+  <form id="archive-search" class="search">
+    <input id="archive-url" class="field" aria-label="Website URL" value="www.elsinore-royal.dk" autocomplete="off" spellcheck="false">
+    <button class="btn primary" type="submit">Search</button>
+  </form>
+  <div id="search-error" class="error hidden" role="alert">No archive records found for this URL. This demonstration only accepts www.elsinore-royal.dk.</div>
+
+  <div id="archive-results">
+    <div class="summary">
+      <div><div class="domain">www.elsinore-royal.dk</div><div class="muted" style="margin-top:5px">8 recorded entries · 3 available · 5 unavailable</div></div>
+      <div class="sim-tag">ARCHIVE SIMULATION</div>
+    </div>
+
+    <section class="panel">
+      <div class="ph">Capture calendar</div>
+      <div class="pb">
+        <p class="muted" style="margin:0 0 13px">Select a highlighted date to inspect a capture. Years are omitted in this version.</p>
+        <div class="months" id="calendar"></div>
+        <div class="legend"><span><i class="dot"></i>Available capture</span><span><i class="dot dead"></i>Unavailable capture</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="ph">Snapshot history</div>
+      <div class="pb" id="snapshot-list"></div>
+    </section>
+
+    <section class="panel" id="viewer">
+      <div class="archivehead" id="viewer-bar">ARCHIVED PAGE VIEWER · SELECT A SNAPSHOT ABOVE</div>
+      <div class="pb" id="viewer-content">
+        <div style="text-align:center;padding:32px 12px;color:#666">
+          <div style="font-size:32px;margin-bottom:10px">◷</div>
+          <div style="font-size:16px;color:#333;font-weight:600">Choose a capture date</div>
+          <p style="line-height:1.6">The selected archived page will appear here.</p>
+        </div>
+      </div>
+    </section>
+
+    <p class="footnote">Demonstration only. This is not the official Internet Archive. Dates, availability states and sample document content are illustrative; they do not establish that the named website was captured or that any document is authentic.</p>
+  </div>
+</main>
+<script>
+(function(){
+  const records = [
+    {date:'02-12', month:2, day:12, active:true, heading:'Notice and administrative record', body:'This illustrative archived page represents an administrative document as it might appear in a historical website capture. The original document text has not been supplied or verified.', ref:'DEMO-0212'},
+    {date:'02-25', month:2, day:25, active:true, heading:'Supplementary notice', body:'This illustrative sample represents a subsequent notice in the archive timeline. It is a fictional interface placeholder, not a transcription of an actual official record.', ref:'DEMO-0225'},
+    {date:'03-04', month:3, day:4, active:false},
+    {date:'04-18', month:4, day:18, active:false},
+    {date:'06-07', month:6, day:7, active:false},
+    {date:'09-14', month:9, day:14, active:false},
+    {date:'11-21', month:11, day:21, active:false},
+    {date:'12-09', month:12, day:9, active:true, heading:'Historical record and notice', body:'This illustrative sample represents a historical record available in this simulated archive. Its wording, reference number and contents are fictional and must not be treated as an authentic official document.', ref:'DEMO-1209'}
+  ];
+  let selected = null;
+  const $ = id => document.getElementById(id);
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const shortMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function pretty(r){ return monthNames[r.month-1]+' '+r.day; }
+
+  function drawCalendar(){
+    const cal=$('calendar'); cal.innerHTML='';
+    // Leap-year-neutral calendar layout: February is shown with 29 days so dates work without assigning a year.
+    const lengths=[31,29,31,30,31,30,31,31,30,31,30,31];
+    // Use a fixed weekday layout for a timeless archive calendar; dates are illustrative rather than tied to a specific year.
+    const starts=[3,6,6,2,4,0,2,5,1,3,6,1];
+    [1,2,3,4,5,6,7,8,9,10,11,12].forEach(m=>{
+      const box=document.createElement('div'); box.className='month';
+      const name=document.createElement('div'); name.className='monthname'; name.textContent=monthNames[m-1]; box.appendChild(name);
+      const days=document.createElement('div'); days.className='days';
+      ['M','T','W','T','F','S','S'].forEach(x=>{const e=document.createElement('span');e.textContent=x;e.style.color='#777';days.appendChild(e)});
+      for(let i=0;i<starts[m-1];i++) days.appendChild(document.createElement('span'));
+      for(let d=1;d<=lengths[m-1];d++){
+        const r=records.find(x=>x.month===m&&x.day===d);
+        const e=document.createElement('span'); e.textContent=d;
+        if(r){
+          e.className=(r.active?'snap':'dead')+(selected===r.date?' active':'');
+          e.title=r.active?'Available capture':'Unavailable capture';
+          e.tabIndex=0; e.setAttribute('role','button'); e.setAttribute('aria-label',pretty(r)+(r.active?', available':', unavailable'));
+          e.addEventListener('click',()=>openRecord(r.date));
+          e.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();openRecord(r.date)}});
+        }
+        days.appendChild(e);
+      }
+      box.appendChild(days); cal.appendChild(box);
+    });
+  }
+  function drawList(){
+    const list=$('snapshot-list'); list.innerHTML='';
+    records.forEach(r=>{
+      const row=document.createElement('div'); row.className='snapshot';
+      const left=document.createElement('div'); left.style.minWidth='0';
+      const t=document.createElement('div'); t.style.fontWeight='600'; t.textContent=pretty(r);
+      const sub=document.createElement('div'); sub.className='muted'; sub.style.marginTop='5px'; sub.textContent=r.active?'Archived document · Sample content':'No retrievable page content';
+      left.append(t,sub);
+      const right=document.createElement('div'); right.className='snapshot-right';
+      const status=document.createElement('span'); status.className='status'+(r.active?'':' dead'); status.textContent=r.active?'Available':'Unavailable';
+      const btn=document.createElement('button'); btn.className='btn'; btn.textContent=r.active?'View capture':'Inspect'; btn.addEventListener('click',()=>openRecord(r.date));
+      right.append(status,btn); row.append(left,right); list.appendChild(row);
+    });
+  }
+  function openRecord(date){
+    selected=date;
+    const r=records.find(x=>x.date===date);
+    drawCalendar();
+    $('viewer-bar').textContent='ARCHIVED PAGE VIEWER · '+pretty(r).toUpperCase();
+    const out=$('viewer-content'); out.innerHTML='';
+    if(!r.active){
+      const box=document.createElement('div'); box.className='deadbox';
+      const label=document.createElement('div'); label.style.cssText='font-size:11px;letter-spacing:.7px;color:#a12622;font-weight:700'; label.textContent='ERROR 404 · ARCHIVED CONTENT UNAVAILABLE';
+      const h=document.createElement('h2'); h.style.cssText='font-size:21px;margin:12px 0 8px;font-weight:600'; h.textContent='This capture is not available.';
+      const p=document.createElement('p'); p.style.cssText='color:#555;line-height:1.65;margin:0'; p.textContent='The archive entry exists in this demonstration, but the page content could not be retrieved. The original site may have been unreachable or the capture may be incomplete.';
+      const meta=document.createElement('div'); meta.style.cssText='margin-top:15px;font-size:12px;color:#777'; meta.textContent='Capture date: '+pretty(r)+' · Status: unavailable';
+      box.append(label,h,p,meta); out.appendChild(box); return;
+    }
+    const d=document.createElement('article'); d.className='doc';
+    const tag=document.createElement('div'); tag.style.cssText='font-size:10px;letter-spacing:1.1px;color:#777;font-weight:700'; tag.textContent='ARCHIVED DOCUMENT · SIMULATED';
+    const h=document.createElement('h2'); h.textContent=r.heading;
+    const meta=document.createElement('div'); meta.style.cssText='font-size:12px;color:#666;line-height:1.7'; meta.textContent='Archive date: '+pretty(r)+' · Reference: '+r.ref;
+    const line=document.createElement('div'); line.className='rule';
+    const p=document.createElement('p'); p.textContent=r.body;
+    const note=document.createElement('p'); note.style.cssText='font-size:11px;color:#888;border-top:1px solid #eee;padding-top:12px;margin-top:22px'; note.textContent='Sample content created for this website simulation. Not an authenticated record.';
+    d.append(tag,h,meta,line,p,note); out.appendChild(d);
+  }
+
+  $('archive-search').addEventListener('submit',e=>{
+    e.preventDefault();
+    const v=$('archive-url').value.trim().replace(/^https?:\/\//i,'').replace(/\/+$/,'').toLowerCase();
+    if(v==='www.elsinore-royal.dk'||v==='elsinore-royal.dk'){
+      $('search-error').classList.add('hidden'); $('archive-results').classList.remove('hidden'); $('archive-url').value='www.elsinore-royal.dk';
+    } else {
+      $('search-error').classList.remove('hidden'); $('archive-results').classList.add('hidden');
+    }
+  });
+  drawCalendar(); drawList(); openRecord('02-12');
+})();
+</script>
+</body>
+</html>
