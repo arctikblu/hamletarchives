@@ -18,13 +18,13 @@
 <div class="hint">Try searching for www.elsinore-royal.dk</div><div class="error" id="error" role="status" aria-live="polite"></div></section>
 <section class="results" id="results" aria-live="polite"><div class="resultshead"><div><h2>Saved website history</h2><div class="url">www.elsinore-royal.dk</div></div><div class="count"><strong>8 captures</strong> · January–June 1599</div></div>
 <div class="legend"><span><i class="dot ok"></i>Available capture (3)</span><span><i class="dot broken"></i>Missing capture (5)</span></div>
-<div class="timeline"><div class="year">1599 <span style="font-weight:normal;color:#8a96a2;font-size:12px"> · Snapshot timeline</span></div><div class="timeline-track" id="timeline"></div><div class="summary">Select a snapshot to view its archive status. Archived pages will be added in a later update.</div></div>
+<div class="timeline"><div class="year">1599 <span style="font-weight:normal;color:#8a96a2;font-size:12px"> · Snapshot timeline</span></div><div class="timeline-track" id="timeline"></div><div class="summary">Select a snapshot to view its archive status. Available documents may be opened below.</div></div>
 <div class="detail" id="detail" aria-live="polite"><h3>Select a capture</h3><p>Choose a date on the timeline to inspect the archived record.</p></div></section>
 </main><footer class="footer">HAMLET ARCHIVES · Fictional historical archive created for an interactive adaptation of Shakespeare's <em>Hamlet</em>.<br>Inspired by web archiving interfaces; not affiliated with the Internet Archive.</footer>
 <script>
-// Three surviving snapshots and five missing ones. No document links yet.
+// Three surviving snapshots and five missing ones. The first capture opens death.html.
 const captures=[
- {date:'1599-01-10',month:'JAN',day:'10',ok:true,title:'The Death of King Hamlet',id:'CAP-001'},
+ {date:'1599-01-10',month:'JAN',day:'10',ok:true,title:'The Death of King Hamlet',id:'CAP-001',url:'death.html'},
  {date:'1599-02-04',month:'FEB',day:'04',ok:false,id:'CAP-002'},
  {date:'1599-03-12',month:'MAR',day:'12',ok:false,id:'CAP-003'},
  {date:'1599-04-19',month:'APR',day:'19',ok:false,id:'CAP-004'},
@@ -36,9 +36,18 @@ const captures=[
 const form=document.getElementById('searchForm'),address=document.getElementById('address'),error=document.getElementById('error'),results=document.getElementById('results'),hero=document.getElementById('hero'),timeline=document.getElementById('timeline'),detail=document.getElementById('detail');
 const normalized=s=>s.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/$/,'');
 form.addEventListener('submit',e=>{e.preventDefault();const query=normalized(address.value);if(query!=='www.elsinore-royal.dk'&&query!=='elsinore-royal.dk'){results.classList.remove('visible');hero.classList.remove('compact');error.textContent=query?'No archived captures found for that address.':'Please enter a website address.';return;}error.textContent='';results.classList.add('visible');hero.classList.add('compact');address.value='www.elsinore-royal.dk';});
-function selectCapture(index){const c=captures[index];document.querySelectorAll('.capture').forEach((el,i)=>{el.classList.toggle('active',i===index);el.setAttribute('aria-pressed',String(i===index));});if(c.ok){detail.innerHTML=`<span class="pill">CAPTURE AVAILABLE</span><h3>${c.title}</h3><p>Archived on ${formatDate(c.date)}. This historical snapshot has been preserved.</p><div class="file-id">${c.id} · Document preview not yet available</div>`;}else{detail.innerHTML=`<span class="pill missing">CAPTURE MISSING</span><h3>404 — Snapshot unavailable</h3><p>No retrievable page content exists for the capture dated ${formatDate(c.date)}.</p><div class="file-id">${c.id} · Archive data missing or incomplete</div>`;}}
+function selectCapture(index){const c=captures[index];document.querySelectorAll('.capture').forEach((el,i)=>{el.classList.toggle('active',i===index);el.setAttribute('aria-pressed',String(i===index));});if(c.ok){detail.innerHTML=`<span class="pill">CAPTURE AVAILABLE</span><h3>${c.title}</h3><p>Archived on ${formatDate(c.date)}. This historical snapshot has been preserved.</p><div class="file-id">${c.id} · ${c.url?'Archived document preserved':'Document preview not yet available'}</div>${c.url?`<p style="margin-top:16px"><a href="${c.url}" style="display:inline-block;color:#fff;background:#23619d;padding:10px 15px;border-radius:4px;text-decoration:none;font-weight:700">Read The Death of King Hamlet →</a></p>`:''}`;}else{detail.innerHTML=`<span class="pill missing">CAPTURE MISSING</span><h3>404 — Snapshot unavailable</h3><p>No retrievable page content exists for the capture dated ${formatDate(c.date)}.</p><div class="file-id">${c.id} · Archive data missing or incomplete</div>`;}}
 function formatDate(date){return new Date(date+'T12:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});}
 captures.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='capture '+(c.ok?'ok':'broken');b.setAttribute('aria-label',`${formatDate(c.date)}: ${c.ok?'available':'missing'} capture`);b.setAttribute('aria-pressed','false');b.innerHTML=`<span class="point" aria-hidden="true"></span><span class="day">${c.day}</span><span class="month">${c.month}</span><span class="status">${c.ok?'Saved':'Missing'}</span>`;b.addEventListener('click',()=>selectCapture(i));timeline.appendChild(b);});
+// Restore the searched site and selected capture when returning from an archived page.
+const params=new URLSearchParams(window.location.search);
+if(normalized(params.get('site')||'')==='www.elsinore-royal.dk'||normalized(params.get('site')||'')==='elsinore-royal.dk'){
+ address.value='www.elsinore-royal.dk';
+ form.requestSubmit();
+ const chosen=captures.findIndex(c=>c.date===params.get('capture'));
+ if(chosen!==-1) selectCapture(chosen);
+}
+
 </script>
 </body>
 </html>
